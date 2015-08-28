@@ -3,61 +3,67 @@
 # BlueFence version 0.1 (Prototype)
 # Author: Yeni Setiawan
 # Email	: sandalian@protonmail.ch
-# Blog	: www.sandalian.com
+# Blog	: http://sandalian.com
 
 import bluetooth
 import time
 import sys
 import os
 
-DEFAULT_TIMEOUT = 5                                 # time between searches for device in seconds 
+SCAN_PERIOD = 5                                 # time between searches for device in seconds 
 IF_BT_GONE = 'xrandr --output eDP1 --brightness 0' # The command to run when the device is out of range
 IF_BT_BACK = 'xrandr --output eDP1 --brightness 1' # The command to run when the device is back in range
 MAX_MISSED = 3    
-
+VERBOSE =  True
 
 if len(sys.argv) < 2:
 	print("usage bluefence.py <btaddr>")
 	sys.exit(1)
 
-btaddr= sys.argv[1]
-btInRange=True
-screenLocked=False
-counter=0
+btAddr = sys.argv[1]
+btInRange = True
+screenLocked = False
+awayCounter = 0
 
-print "Initializing device..." 
+print "Identifying device..." 
 
 try:
-	if bluetooth.lookup_name(btaddr,1):
-		print 'OK: Your device is active.'
-
-	initialize =  bluetooth.lookup_name(btaddr,timeout=10)
-	print 'OK: "',initialize,'" found.'
+	# initial check, see if mentioned BT device active. If it's not, clean exit
 	
-	while True:
-		who =  bluetooth.lookup_name(btaddr,timeout=2)
+	btName =  bluetooth.lookup_name(btAddr,timeout=5)
 
-		if who:
+	if btName:
+		if VERBOSE:
+			print 'OK: Found your device',btName
+		
+		while True:
+			who =  bluetooth.lookup_name(btAddr,timeout=2)
 
-			status = 'device found'
-			btInRange=True
-			counter=0
-			os.system(IF_BT_BACK)
+			if who:
 
-		else:
-			
-			counter+=1
-			status = 'device lost '
+				status = 'near'
+				btInRange=True
+				awayCounter=0
+				os.system(IF_BT_BACK)
 
-		if counter > MAX_MISSED:
-			os.system(IF_BT_GONE)
-			status = 'MATI!'
-			counter = 0
-			btInRange=False
+			else:
+				awayCounter+=1
+				status = 'away'
 
-		time.sleep(DEFAULT_TIMEOUT)
+			if awayCounter > MAX_MISSED:
+				os.system(IF_BT_GONE)
+				status = 'MATI!'
+				awayCounter = 0
+				btInRange=False
 
-		print status, ' | ', counter, ' | ', btInRange, ' | ', time.strftime('%H:%M:%S')
+			time.sleep(SCAN_PERIOD)
 
+			print status, '|', awayCounter, '|', btInRange, '|', time.strftime('%H:%M:%S')
+	else:
+		print 'ER: Your bluetooth device is not active'
+		sys.exit
+	
+
+# this usually happen when your PC's bluetooth is disabled.
 except:
-	print('ER: Your device is not ready')
+	print('ER: Bluetooth on PC is not active')
