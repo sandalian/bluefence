@@ -25,7 +25,7 @@ btInRange = True
 screenLocked = False
 awayCounter = 0
 
-print "Identifying device..." 
+print("Identifying device...")
 
 try:
 	# initial check, see if mentioned BT device active. If it's not, clean exit
@@ -34,7 +34,7 @@ try:
 
 	if btName:
 		if VERBOSE:
-			print 'OK: Found your device',btName
+			print('OK: Found your device',btName)
 		
 		while True:
 			who =  bluetooth.lookup_name(btAddr,timeout=2)
@@ -58,9 +58,9 @@ try:
 
 			time.sleep(SCAN_PERIOD)
 
-			print status, '|', awayCounter, '|', btInRange, '|', time.strftime('%H:%M:%S')
+			print(status, '|', awayCounter, '|', btInRange, '|', time.strftime('%H:%M:%S'))
 	else:
-		print 'ER: Your bluetooth device is not active'
+		print('ER: Your bluetooth device is not active')
 		sys.exit
 	
 
