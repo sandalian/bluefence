@@ -3,7 +3,7 @@
 # BlueFence version 0.1 (Prototype)
 # Author: Yeni Setiawan
 # Email	: sandalian@protonmail.ch
-# Blog	: http://sandalian.com
+# Blog	: https://sandalian.com
 
 import bluetooth
 import time
