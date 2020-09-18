@@ -26,27 +26,27 @@ screenLocked=False
 counter=0
 
 if VERBOSE:
-	print "Identifying device..." 
-	print bluetooth.lookup_name(btaddr,timeout=10)
+	print ("Identifying device...")
+	print (bluetooth.lookup_name(btaddr,timeout=10))
 
 try:
 	if bluetooth.lookup_name(btaddr,timeout=10):
 		if VERBOSE:
-			print 'OK: Your device is active.'
+			print ('OK: Your device is active.')
 	else:
 		if VERBOSE:
-			print 'Your device is inactive.'
-			print 'Activate your device and try again.'
+			print ('Your device is inactive.')
+			print ('Activate your device and try again.')
 		sys.exit(1)
 
 	identify =  bluetooth.lookup_name(btaddr,timeout=5).strip()
 
 	if identify:
 		if VERBOSE:
-			print 'OK: Found',identify.strip()
+			print ('OK: Found',identify.strip())
 	else:
 		if VERBOSE:
-			print 'ER: No device found.'
+			print ('ER: No device found.')
 
 	while True:
 		who =  bluetooth.lookup_name(btaddr,timeout=2)
@@ -87,7 +87,7 @@ try:
 		firstCheck+=1
 
 		#if VERBOSE:
-		print status, '|', counter, '|', btInRange, '|', time.strftime('%H:%M:%S')
+		print(status, '|', counter, '|', btInRange, '|', time.strftime('%H:%M:%S'))
 
 except:
 	print('ER: Bluetooth on PC is not active.')
